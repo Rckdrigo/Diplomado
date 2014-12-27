@@ -4,36 +4,65 @@ using System.Collections;
 [RequireComponent(typeof(SphereCollider))]
 public class ZombieBehaviour : Follower {
 
-	private GameObject player;
 	protected bool following;
+	GameObject currentObjective;
 
 	new void Start(){
 		base.Start();
-		player = GameObject.FindWithTag("Player");
 		collider.isTrigger = true;
 		following = false;
+		currentObjective = null;
 	}
 
 	new void Update(){
-		if(animator.GetCurrentAnimatorStateInfo(0).IsName("walk") && following)
-			agent.SetDestination(player.transform.position);
+		base.Update();
+		if(currentObjective == null && following){
+			animator.SetTrigger("Die");
+		}
 		
-
-		if(Vector3.Distance(transform.position,player.transform.position) < 4)
-			animator.SetTrigger("Bite");
+		if(following)
+			destination = currentObjective.transform.position;
 	}
-
-	new void OnTriggerEnter(Collider collider){
-		if(collider.CompareTag("Player") && !following){
+	
+	void Follow(){
+		following = true;
+		agent.SetDestination(currentObjective.transform.position);
+	}
+	
+	void OnTriggerEnter(Collider collider){
+		if(collider.CompareTag("MiniMan") && !following && collider.GetComponent<MiniManIA>().selected){
 			following = true;
 			animator.SetTrigger("Resurrect");
+			currentObjective = collider.gameObject;
 		}
-
-		//if(following && collider.CompareTag("MiniMan")){
-		//	objective = collider.gameObject.transform;
-		//}
-
+	}
+	
+	void OnTriggerStay(Collider collider){
+		if(following && collider.CompareTag("MiniMan")){
+			if(currentObjective != null){
+				if(Vector3.Distance(transform.position,collider.transform.position) < Vector3.Distance(transform.position,currentObjective.transform.position))
+					currentObjective = collider.gameObject;
+					
+				if(Vector3.Distance(transform.position,currentObjective.transform.position) < 3.5f)
+					animator.SetTrigger("Bite");	
+			}else
+				currentObjective = collider.gameObject;
+		}
 	}
 
+	void Dead(){
+		following = false;
+	}
+
+	void Bitting(){
+		if(currentObjective != null){
+			if(Vector3.Distance(transform.position,currentObjective.transform.position) < 3f){
+				if(currentObjective == CharController.Instance.actualHuman)
+					CharController.Instance.ActualHumanKilled();
+				else
+					CharController.Instance.HumanKilled(currentObjective);
+			}
+		}
+	}
 
 }
