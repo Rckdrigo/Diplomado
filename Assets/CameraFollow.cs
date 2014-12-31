@@ -3,6 +3,9 @@ using System.Collections;
 
 public class CameraFollow : MonoBehaviour {
 
+	[Range(1f,5f)]
+	public float camSmooth = 1f;
+
 	// Update is called once per frame
 	void Update () {
 		Vector3 position = Vector3.zero;
@@ -13,6 +16,6 @@ public class CameraFollow : MonoBehaviour {
 		position /= CharController.Instance.selectedHumans.Count;
 		position.y = transform.position.y;
 		
-		transform.position = Vector3.Lerp(transform.position,position,Time.time);
+		transform.position = Vector3.Lerp(transform.position,position,Time.deltaTime * camSmooth);
 	}
 }

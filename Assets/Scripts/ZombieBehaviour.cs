@@ -18,6 +18,7 @@ public class ZombieBehaviour : Follower {
 		base.Update();
 		if(currentObjective == null && following){
 			animator.SetTrigger("Die");
+			following = false;
 		}
 		
 		if(following)
