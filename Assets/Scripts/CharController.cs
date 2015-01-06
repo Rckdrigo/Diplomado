@@ -25,14 +25,22 @@ public class CharController : Singleton<CharController> {
 		selectedHumans.Add(initalHuman);
 	}
 
+	public void DamageHuman(GameObject human, int damageAmount){
+		human.GetComponent<LifeManager>().RecievedDamage(damageAmount);
+	}
+
 	public void HumanKilled(GameObject human){
+		if(human == actualHuman){
+			ActualHumanKilled();
+			return;
+		}
 		selectedHumans.Remove(human);
-		Destroy(human);
+		ObjectPool.instance.PoolGameObject(human);
 	}
 	
-	public void ActualHumanKilled(){
+	void ActualHumanKilled(){
 		selectedHumans.Remove(actualHuman);
-		Destroy(actualHuman);
+		ObjectPool.instance.PoolGameObject(actualHuman);
 		if(selectedHumans.Count>0){
 			actualHuman = selectedHumans[Random.Range(0,selectedHumans.Count)];
 			actualHuman.GetComponent<MiniManIA>().ToggleTargetSprite(true);

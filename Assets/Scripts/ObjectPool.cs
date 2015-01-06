@@ -16,12 +16,8 @@ public class ObjectPool : MonoBehaviour {
 	public List<GameObject>[] generalPool;
 	protected GameObject containerObject;
 
-	// Use this for initialization
-	void Awake () {
+	void Awake(){
 		instance = this; 
-	}
-
-	void Start(){
 		containerObject = new GameObject ("ObjectPool");
 		generalPool = new List<GameObject>[prefabs.Length];
 
@@ -42,6 +38,16 @@ public class ObjectPool : MonoBehaviour {
 		for (int i = 0; i < prefabs.Length; i++) {
 			if(prefabs[i].prefab.name == obj.name){
 				obj.SetActive(false);
+				obj.transform.parent = containerObject.transform;
+				obj.transform.position = containerObject.transform.position;
+				generalPool[i].Add(obj);
+			}
+		}
+	}
+
+	public void PoolGameObjectActive(GameObject obj) {
+		for (int i = 0; i < prefabs.Length; i++) {
+			if(prefabs[i].prefab.name == obj.name){
 				obj.transform.parent = containerObject.transform;
 				generalPool[i].Add(obj);
 			}
