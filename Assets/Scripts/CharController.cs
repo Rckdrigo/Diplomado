@@ -14,7 +14,7 @@ public class CharController : Singleton<CharController> {
 	
 	void OnEnable(){
 		RayCastListener.Instance.RayCastLeft += SelectHuman;
-		RayCastListener.Instance.RayCastRight += SetSelectedHumanDestination;
+		RayCastListener.Instance.RayCastLeft += SetSelectedHumanDestination;
 	}
 	
 	void Start(){
@@ -66,6 +66,6 @@ public class CharController : Singleton<CharController> {
 	}
 
 	void SetSelectedHumanDestination(){
-		actualHuman.GetComponent<MiniManIA> ().destination = RayCastListener.Instance.hitRight.point;
+		actualHuman.GetComponent<MiniManIA> ().destination = RayCastListener.Instance.hitLeft.point;
 	}
 }

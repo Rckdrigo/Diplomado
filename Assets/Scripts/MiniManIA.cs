@@ -27,7 +27,7 @@ public class MiniManIA : Follower {
 		animator.SetFloat("Speed",agent.velocity.magnitude);
 		
 		if(selected && !CharController.Instance.actualHuman.Equals(gameObject)){
-			if(Vector3.Distance(CharController.Instance.actualHuman.transform.position,transform.position) > 2.5f)
+			if(Vector3.Distance(CharController.Instance.actualHuman.transform.position,transform.position) > 1.5f)
 				destination = CharController.Instance.actualHuman.transform.position;	
 			else
 				destination = transform.position;
