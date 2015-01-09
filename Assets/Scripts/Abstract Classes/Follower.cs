@@ -21,14 +21,13 @@ public abstract class Follower : MonoBehaviour {
 		yield return new WaitForSeconds(time);
 		StartCoroutine(Wander(time));
 	}
-
+	
 	protected void Start(){
 		initialPosition = transform.position;
 		agent = GetComponent<NavMeshAgent>();
+		destination = transform.position;
 		animator = GetComponent<Animator>();
-		if(!wander)
-			destination = transform.position;
-		else
+		if(wander)
 			StartCoroutine(Wander(3f));
 	}
 

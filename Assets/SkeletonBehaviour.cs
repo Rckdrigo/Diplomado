@@ -46,6 +46,7 @@ public class SkeletonBehaviour : Follower {
 		if(collider.CompareTag("MiniMan") && !following && collider.GetComponent<MiniManIA>().selected){
 			following = true;
 			wander = false;
+			agent.enabled = true;
 			currentObjective = collider.gameObject;
 		}	
 	}
@@ -70,9 +71,18 @@ public class SkeletonBehaviour : Follower {
 		}
 	}
 	
+	void Hit(){
+		if(currentObjective != null){
+			if(Vector3.Distance(transform.position,currentObjective.transform.position) < 3f)
+				CharController.Instance.DamageHuman(currentObjective,damageDeal);
+			
+		}
+	}
+	
 	void Die(){
 		animator.SetTrigger("Die");
 		currentObjective = null;
-		destination = transform.position;
+		agent.enabled = false;
+		following = false;
 	}
 }

@@ -97,7 +97,7 @@ public class ZombieBehaviour : Follower {
 	
 	void Bitting(){
 		if(currentObjective != null){
-			if(Vector3.Distance(transform.position,currentObjective.transform.position) < 3f)
+			if(Vector3.Distance(transform.position,currentObjective.transform.position) < 3.5f)
 				CharController.Instance.DamageHuman(currentObjective,damageDeal);
 
 		}

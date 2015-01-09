@@ -69,6 +69,8 @@ public class CharController : Singleton<CharController> {
 	}
 
 	void SetSelectedHumanDestination(){
-		actualHuman.GetComponent<MiniManIA> ().destination = RayCastListener.Instance.hitLeft.point;
+		if(!RayCastListener.Instance.left.CompareTag("MiniMan"))
+				actualHuman.GetComponent<MiniManIA> ().destination = RayCastListener.Instance.hitLeft.point;
+
 	}
 }

@@ -7,6 +7,7 @@ public class RayCastListener : Singleton<RayCastListener> {
 	public delegate void RayCastEventListener();
 	public event RayCastEventListener RayCastRight;
 	public event RayCastEventListener RayCastLeft;
+	public event RayCastEventListener RayCastTouch;
 
 	[HideInInspector()]
 	public RaycastHit hitRight;
@@ -14,16 +15,19 @@ public class RayCastListener : Singleton<RayCastListener> {
 	public RaycastHit hitLeft;
 	
 	[HideInInspector()]
-	public GameObject right, left;
+	public RaycastHit hitTouch;
+	
 	[HideInInspector()]
-	public GameObject lastRight, lastLeft;
+	public GameObject right, left, touch;
+	[HideInInspector()]
+	public GameObject lastRight, lastLeft, lastTouch;
 	
 	GameObject HitToGameObject(RaycastHit hit){
 		return hit.transform.gameObject;
 	}	
 
 	void Start(){
-		right = left = lastLeft = lastRight = null;
+		right = left = lastLeft = lastRight = touch = null;
 	}
 
 	void Update () {
@@ -37,14 +41,23 @@ public class RayCastListener : Singleton<RayCastListener> {
 				RayCastLeft();
 			}
 		}
+		
+		if(Input.touchCount>0){
+			Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+			if(Physics.Raycast(ray, out hitTouch)){
+				touch = HitToGameObject(hitTouch);
+				lastTouch = touch;
+				RayCastTouch();
+			}
+		}
 
-		/*if(Input.GetMouseButtonDown(1)){
+		if(Input.GetMouseButtonDown(1)){
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			if(Physics.Raycast(ray, out hitRight)){
 				right = HitToGameObject(hitRight);
 				lastRight = right;
 				RayCastRight();
 			}
-		}*/
+		}
 	}
 }
