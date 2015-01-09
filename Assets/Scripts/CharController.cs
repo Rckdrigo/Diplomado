@@ -18,9 +18,9 @@ public class CharController : Singleton<CharController> {
 	}
 	
 	void Start(){
+		actualHuman = initalHuman;
 		initalHuman.GetComponent<MiniManIA>().ToggleTargetSprite(true);
 		initalHuman.GetComponent<MiniManIA>().Selected();
-		actualHuman = initalHuman;
 		selectedHumans = new List<GameObject>();
 		selectedHumans.Add(initalHuman);
 	}
@@ -53,6 +53,7 @@ public class CharController : Singleton<CharController> {
 		if (RayCastListener.Instance.left.CompareTag ("MiniMan")) {
 			actualHuman = RayCastListener.Instance.left;
 			actualHuman.GetComponent<MiniManIA>().ToggleTargetSprite(true);
+			
 			foreach(GameObject human in selectedHumans){
 				if(!human.Equals(actualHuman))
 					human.GetComponent<MiniManIA>().ToggleTargetSprite(false);
@@ -62,6 +63,8 @@ public class CharController : Singleton<CharController> {
 				actualHuman.GetComponent<MiniManIA>().Selected();
 				selectedHumans.Add(actualHuman);
 			}
+			
+			
 		}
 	}
 

@@ -38,13 +38,13 @@ public class RayCastListener : Singleton<RayCastListener> {
 			}
 		}
 
-		if(Input.GetMouseButtonDown(1)){
+		/*if(Input.GetMouseButtonDown(1)){
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			if(Physics.Raycast(ray, out hitRight)){
 				right = HitToGameObject(hitRight);
 				lastRight = right;
 				RayCastRight();
 			}
-		}
+		}*/
 	}
 }

@@ -12,7 +12,7 @@ public abstract class Follower : MonoBehaviour {
 
 	[HideInInspector()]
 	public Vector3 destination;
-
+	protected Vector3 initialPosition;
 
 	protected IEnumerator Wander(float time){
 		destination = transform.position + Random.onUnitSphere * 3;
@@ -23,6 +23,7 @@ public abstract class Follower : MonoBehaviour {
 	}
 
 	protected void Start(){
+		initialPosition = transform.position;
 		agent = GetComponent<NavMeshAgent>();
 		animator = GetComponent<Animator>();
 		if(!wander)
