@@ -4,8 +4,9 @@ using System.Collections;
 public class LifeManager : MonoBehaviour {
 
 	public int maxlife = 100;
-	//[HideInInspector()]
 	public int life;
+	[HideInInspector()]
+	public bool death;
 
 	public delegate void HealthListener();
 	public event HealthListener NoHealth;
@@ -34,8 +35,10 @@ public class LifeManager : MonoBehaviour {
 		if(life < 0)
 			life = 0;
 
-		if(life == 0)
+		if(life == 0){
+			death = true;
 			NoHealth();
+		}
 	}
 
 	public void DecreaseMaxHealth(int amountDecreased){

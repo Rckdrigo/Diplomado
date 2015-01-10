@@ -98,9 +98,6 @@ public class ZombieBehaviour : Follower {
 	
 	void Lose(){
 		following = false;
-		animator.SetTrigger("Die");
-		agent.enabled = false;
-		enabled = false;
 	}
 	
 	void Bitting(){

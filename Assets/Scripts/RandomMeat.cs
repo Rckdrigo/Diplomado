@@ -12,7 +12,7 @@ public class RandomMeat : MonoBehaviour {
 	public Model[] meat;
 	
 	// Use this for initialization
-	void Start () {
+	void OnEnable () {
 		int i = Random.Range(0,meat.Length-1);
 		GetComponent<MeshFilter>().mesh = meat[i].mesh;
 		transform.rotation = Quaternion.Euler(Random.onUnitSphere);

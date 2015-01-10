@@ -14,6 +14,7 @@ public class ScenarioInitiation : MonoBehaviour {
 			temp.transform.position = zombieSpawnPoints.GetChild(i).position;
 			temp.GetComponent<NavMeshAgent>().enabled = true;
 			temp.GetComponent<ZombieBehaviour>().enabled = true;
+			EnemyController.Instance.enemies.Add(temp);
 		}
 
 		for(int i = 0; i < humanSpawnPoints.childCount; i++){
@@ -21,11 +22,13 @@ public class ScenarioInitiation : MonoBehaviour {
 			temp.transform.position = humanSpawnPoints.GetChild(i).position;
 			temp.GetComponent<NavMeshAgent>().enabled = true;
 			temp.GetComponent<MiniManIA>().enabled = true;
+			CharController.Instance.humans.Add(temp);
 		}
 		
 		for(int i = 0; i < medPackSpawnPoints.childCount; i++){
 			GameObject temp = ObjectPool.instance.GetGameObjectOfType("MedPack",true);
 			temp.transform.position = medPackSpawnPoints.GetChild(i).position;
+			ItemController.Instance.items.Add(temp);
 		}
 	}
 

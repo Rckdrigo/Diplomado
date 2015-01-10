@@ -3,14 +3,15 @@ using System.Collections;
 
 public class MiniManIA : Follower {
 
+	public bool initial;
 	public GameObject selectionSprite;
 	[HideInInspector()]
 	public bool selected;
-
+	
 	new void Start(){
 		base.Start ();
 	}
-	
+
 	void OnEnable(){
 		selectionSprite.SetActive (false);
 		selected = false;
@@ -39,6 +40,10 @@ public class MiniManIA : Follower {
 				destination = CharController.Instance.actualHuman.transform.position;	
 		yield return new WaitForSeconds(0.5f);
 		StartCoroutine("FollowLeader");
+	}
+	
+	public void ResetPosition(){
+		transform.position = initialPosition;
 	}
 	
 	void Hit(){}

@@ -10,9 +10,13 @@ public class CharController : Singleton<CharController> {
 	public GameObject actualHuman;	
 	[HideInInspector()]
 	public List<GameObject> selectedHumans;
+	[HideInInspector()]
+	public List<GameObject> humans;
 	
 	public delegate void DeathListener();
 	public event DeathListener Lose;
+	
+	bool lose;
 	
 	void OnEnable(){
 		RayCastListener.Instance.RayCastLeft += SelectHuman;
@@ -24,6 +28,7 @@ public class CharController : Singleton<CharController> {
 		initalHuman.GetComponent<MiniManIA>().ToggleTargetSprite(true);
 		initalHuman.GetComponent<MiniManIA>().Selected();
 		selectedHumans = new List<GameObject>();
+		humans = new List<GameObject>();
 		selectedHumans.Add(initalHuman);
 	}
 
@@ -38,25 +43,39 @@ public class CharController : Singleton<CharController> {
 		}
 		selectedHumans.Remove(human);
 		actualHuman.GetComponent<Animator>().SetTrigger("Die");
-		//ObjectPool.instance.PoolGameObject(human);
 	}
 	
 	void ActualHumanKilled(){
 		selectedHumans.Remove(actualHuman);
+		actualHuman.GetComponent<Animator>().SetTrigger("Die");
+		actualHuman.GetComponent<MiniManIA>().ToggleTargetSprite(false);
 		if(selectedHumans.Count>0){
-			ObjectPool.instance.PoolGameObject(actualHuman);
 			actualHuman = selectedHumans[Random.Range(0,selectedHumans.Count)];
 			actualHuman.GetComponent<MiniManIA>().ToggleTargetSprite(true);
 		}
 		else{
-			actualHuman.GetComponent<Animator>().SetTrigger("Die");
-			actualHuman.GetComponent<MiniManIA>().ToggleTargetSprite(false);
+			lose = true;
+			PoolAllCharacters();
 			Lose();
 		}
 	}
+	
+	void PoolAllCharacters(){
+		foreach(GameObject human in humans){
+			human.GetComponent<LifeManager>().life = human.GetComponent<LifeManager>().maxlife;
+			if(!human.GetComponent<MiniManIA>().initial){
+				human.GetComponent<MiniManIA>().enabled = false;
+				human.GetComponent<NavMeshAgent>().enabled = false;
+				ObjectPool.instance.PoolGameObject(human);
+			}
+			else
+				human.GetComponent<MiniManIA>().ResetPosition();
+		}
+	}
+	
 
 	void SelectHuman(){
-		if (RayCastListener.Instance.left.CompareTag ("MiniMan")) {
+		if (RayCastListener.Instance.left.CompareTag ("MiniMan") && !lose) {
 			actualHuman = RayCastListener.Instance.left;
 			actualHuman.GetComponent<MiniManIA>().ToggleTargetSprite(true);
 			
@@ -75,7 +94,7 @@ public class CharController : Singleton<CharController> {
 	}
 
 	void SetSelectedHumanDestination(){
-		if(!RayCastListener.Instance.right.CompareTag("MiniMan"))
+		if(!RayCastListener.Instance.right.CompareTag("MiniMan") && !lose)
 				actualHuman.GetComponent<MiniManIA> ().destination = RayCastListener.Instance.hitRight.point;
 
 	}
