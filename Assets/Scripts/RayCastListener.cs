@@ -42,14 +42,14 @@ public class RayCastListener : Singleton<RayCastListener> {
 			}
 		}
 		
-		if(Input.touchCount>0){
+		/*if(Input.touchCount>0){
 			Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
 			if(Physics.Raycast(ray, out hitTouch)){
 				touch = HitToGameObject(hitTouch);
 				lastTouch = touch;
 				RayCastTouch();
 			}
-		}
+		}*/
 
 		if(Input.GetMouseButtonDown(1)){
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

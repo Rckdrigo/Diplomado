@@ -5,6 +5,7 @@ public class ScenarioInitiation : MonoBehaviour {
 
 	public Transform zombieSpawnPoints;
 	public Transform humanSpawnPoints;
+	public Transform medPackSpawnPoints;
 
 	// Use this for initialization
 	void Start () {
@@ -20,6 +21,11 @@ public class ScenarioInitiation : MonoBehaviour {
 			temp.transform.position = humanSpawnPoints.GetChild(i).position;
 			temp.GetComponent<NavMeshAgent>().enabled = true;
 			temp.GetComponent<MiniManIA>().enabled = true;
+		}
+		
+		for(int i = 0; i < medPackSpawnPoints.childCount; i++){
+			GameObject temp = ObjectPool.instance.GetGameObjectOfType("MedPack",true);
+			temp.transform.position = medPackSpawnPoints.GetChild(i).position;
 		}
 	}
 

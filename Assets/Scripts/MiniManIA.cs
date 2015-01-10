@@ -47,5 +47,15 @@ public class MiniManIA : Follower {
 		base.Update();
 		animator.SetFloat("Speed",agent.velocity.magnitude);
 	}
+	
+	void OnTriggerEnter(Collider collider){
+		if(collider.CompareTag("MedPack") && CharController.Instance.actualHuman == gameObject){
+			foreach(GameObject o in CharController.Instance.selectedHumans)
+				o.GetComponent<LifeManager>().RecoverHealth(50);
+			
+			ObjectPool.instance.PoolGameObject(collider.gameObject);
+		}
+	}
+	
 
 }

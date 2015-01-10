@@ -16,6 +16,7 @@ public class ZombieBehaviour : Follower {
 	
 	new void Start(){
 		base.Start();
+		CharController.Instance.Lose += Lose;
 		rigidbody.isKinematic = true;
 		collider.isTrigger = true;
 		following = false;
@@ -93,6 +94,13 @@ public class ZombieBehaviour : Follower {
 		life.life = life.maxlife;
 		currentObjective = null;
 		panic = false;
+	}
+	
+	void Lose(){
+		following = false;
+		animator.SetTrigger("Die");
+		agent.enabled = false;
+		enabled = false;
 	}
 	
 	void Bitting(){
