@@ -18,8 +18,8 @@ public class Poison : MonoBehaviour {
 	
 	IEnumerator PoisonDamage(){
 		yield return new WaitForSeconds(time);
-		foreach(GameObject o in CharController.Instance.selectedHumans)
-			o.GetComponent<LifeManager>().RecievedDamage(damage);
+		for(int i = 0;  i < CharController.Instance.selectedHumans.Count; i++)
+			CharController.Instance.selectedHumans[i].GetComponent<LifeManager>().RecievedDamage(damage);
 		StartCoroutine(PoisonDamage());
 	}
 	

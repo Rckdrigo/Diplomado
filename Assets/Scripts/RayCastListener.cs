@@ -33,31 +33,31 @@ public class RayCastListener : Singleton<RayCastListener> {
 	void Update () {
 		right = left = null;
 
-		if(Input.GetMouseButtonDown(0)){
+		/*if(Input.GetMouseButtonDown(0)){
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			if(Physics.Raycast(ray, out hitLeft)){
 				left = HitToGameObject(hitLeft);
 				lastLeft = left;
 				RayCastLeft();
 			}
-		}
+		}*/
 		
-		/*if(Input.touchCount>0){
+		if(Input.touchCount>0){
 			Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
 			if(Physics.Raycast(ray, out hitTouch)){
 				touch = HitToGameObject(hitTouch);
 				lastTouch = touch;
 				RayCastTouch();
 			}
-		}*/
+		}
 
-		if(Input.GetMouseButtonDown(1)){
+		/*if(Input.GetMouseButtonDown(1)){
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			if(Physics.Raycast(ray, out hitRight)){
 				right = HitToGameObject(hitRight);
 				lastRight = right;
 				RayCastRight();
 			}
-		}
+		}*/
 	}
 }

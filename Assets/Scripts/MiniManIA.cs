@@ -10,6 +10,7 @@ public class MiniManIA : Follower {
 	
 	new void Start(){
 		base.Start ();
+		
 	}
 
 	void OnEnable(){
@@ -36,7 +37,7 @@ public class MiniManIA : Follower {
 	
 	public IEnumerator FollowLeader(){
 		if(selected && !CharController.Instance.actualHuman.Equals(gameObject))
-			if(Vector3.Distance(CharController.Instance.actualHuman.transform.position,transform.position) > 1.5f)
+			if(Vector3.Distance(CharController.Instance.actualHuman.transform.position,transform.position) > 3f)
 				destination = CharController.Instance.actualHuman.transform.position;	
 		yield return new WaitForSeconds(0.5f);
 		StartCoroutine("FollowLeader");

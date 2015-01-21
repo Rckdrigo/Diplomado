@@ -19,8 +19,8 @@ public class CharController : Singleton<CharController> {
 	bool lose;
 	
 	void OnEnable(){
-		RayCastListener.Instance.RayCastLeft += SelectHuman;
-		RayCastListener.Instance.RayCastRight += SetSelectedHumanDestination;
+		RayCastListener.Instance.RayCastTouch += SelectHuman;
+		RayCastListener.Instance.RayCastTouch += SetSelectedHumanDestination;
 	}
 	
 	void Start(){
@@ -37,12 +37,14 @@ public class CharController : Singleton<CharController> {
 	}
 
 	public void HumanKilled(GameObject human){
+		human.GetComponent<MiniManIA>().StopCoroutine("FollowLeader");
 		if(human == actualHuman){
 			ActualHumanKilled();
-			return;
 		}
-		selectedHumans.Remove(human);
-		actualHuman.GetComponent<Animator>().SetTrigger("Die");
+		else{
+			selectedHumans.Remove(human);
+			human.GetComponent<Animator>().SetTrigger("Die");
+		}
 	}
 	
 	void ActualHumanKilled(){
@@ -68,15 +70,15 @@ public class CharController : Singleton<CharController> {
 				human.GetComponent<NavMeshAgent>().enabled = false;
 				ObjectPool.instance.PoolGameObject(human);
 			}
-			else
-				human.GetComponent<MiniManIA>().ResetPosition();
+			//else
+				//human.GetComponent<MiniManIA>().ResetPosition();
 		}
 	}
 	
 
 	void SelectHuman(){
-		if (RayCastListener.Instance.left.CompareTag ("MiniMan") && !lose) {
-			actualHuman = RayCastListener.Instance.left;
+		if (RayCastListener.Instance.touch.CompareTag ("MiniMan") && !lose) {
+			actualHuman = RayCastListener.Instance.touch;
 			actualHuman.GetComponent<MiniManIA>().ToggleTargetSprite(true);
 			
 			foreach(GameObject human in selectedHumans){
@@ -94,8 +96,8 @@ public class CharController : Singleton<CharController> {
 	}
 
 	void SetSelectedHumanDestination(){
-		if(!RayCastListener.Instance.right.CompareTag("MiniMan") && !lose)
-				actualHuman.GetComponent<MiniManIA> ().destination = RayCastListener.Instance.hitRight.point;
+		if(!RayCastListener.Instance.touch.CompareTag("MiniMan") && !lose)
+				actualHuman.GetComponent<MiniManIA> ().destination = RayCastListener.Instance.hitTouch.point;
 
 	}
 }
