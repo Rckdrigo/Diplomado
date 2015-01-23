@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CameraFollow : MonoBehaviour {
 
-	[Range(1f,5f)]
+	[Range(1f,10f)]
 	public float camSmooth = 1f;
 
 	// Update is called once per frame

@@ -2,8 +2,7 @@
 using System.Collections;
 
 public class Poison : MonoBehaviour {
-	public float time = 1f;
-	public int damage = 5;
+	public int damage = 10;
 	
 	// Use this for initialization
 	void Start () {
@@ -17,9 +16,11 @@ public class Poison : MonoBehaviour {
 	}
 	
 	IEnumerator PoisonDamage(){
-		yield return new WaitForSeconds(time);
-		for(int i = 0;  i < CharController.Instance.selectedHumans.Count; i++)
-			CharController.Instance.selectedHumans[i].GetComponent<LifeManager>().RecievedDamage(damage);
+
+		yield return new WaitForSeconds(CharController.Instance.selectedHumans.Count*0.5f+1);
+		if(!GameState.Instance.paused)
+			for(int i = 0; i < CharController.Instance.selectedHumans.Count; i++)
+				CharController.Instance.selectedHumans[i].GetComponent<LifeManager>().RecievedDamage(damage);
 		StartCoroutine(PoisonDamage());
 	}
 	

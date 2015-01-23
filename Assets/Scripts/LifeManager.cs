@@ -11,7 +11,12 @@ public class LifeManager : MonoBehaviour {
 	public delegate void HealthListener();
 	public event HealthListener NoHealth;
 
-	void Start(){
+	void Start(){	
+		life = maxlife;
+		GameState.Instance.Restart += Restart;
+	}
+
+	void Restart(){
 		life = maxlife;
 	}
 
@@ -35,7 +40,7 @@ public class LifeManager : MonoBehaviour {
 		if(life < 0)
 			life = 0;
 
-		if(life == 0){
+		if(life <= 0){
 			death = true;
 			NoHealth();
 		}

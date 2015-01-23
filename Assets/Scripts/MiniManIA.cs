@@ -4,34 +4,37 @@ using System.Collections;
 public class MiniManIA : Follower {
 
 	public bool initial;
-	public GameObject selectionSprite;
 	[HideInInspector()]
 	public bool selected;
+
+	public Renderer rimShader;
 	
 	new void Start(){
 		base.Start ();
-		
+		GameState.Instance.Restart += Restart;
+		CharController.Instance.Lose += Lose;
+
+		rimShader.renderer.material.SetColor("_RimColor",Color.white);
+		destination = initialPosition;
+		if(initial){
+			ActualSelectedState(true);
+			Selected();
+		}
 	}
 
-	void OnEnable(){
-		selectionSprite.SetActive (false);
-		selected = false;
-	}
-	
 	public void Selected(){
 		selected = true;
 		StopAllCoroutines();
 	}
 	
-	public void ToggleTargetSprite(bool active){
-		selectionSprite.SetActive(active);
+	public void ActualSelectedState(bool active){
 		if(!active){
+			rimShader.renderer.material.SetColor("_RimColor",Color.blue);
 			StartCoroutine("FollowLeader");
-			agent.stoppingDistance = 2;
 		}
 		else{
+			rimShader.renderer.material.SetColor("_RimColor",Color.red);
 			StopCoroutine("FollowLeader");
-			agent.stoppingDistance = 0;
 		}
 	}
 	
@@ -46,7 +49,27 @@ public class MiniManIA : Follower {
 	public void ResetPosition(){
 		transform.position = initialPosition;
 	}
-	
+
+	void Restart(){		
+		ResetPosition();
+		collider.enabled = true;
+		rimShader.renderer.material.SetColor("_RimColor",Color.white);
+		destination = transform.position;
+		
+		GetComponent<MiniManIA>().StopCoroutine("FollowLeader");
+		if(initial){
+			ActualSelectedState(true);
+			Selected();
+		}
+		else{
+			selected = false;
+		}
+	}
+
+	void Lose(){
+		animator.SetTrigger("Reset");
+	}
+
 	void Hit(){}
 	
 	new void Update(){
@@ -58,7 +81,7 @@ public class MiniManIA : Follower {
 		if(collider.CompareTag("MedPack") && CharController.Instance.actualHuman == gameObject){
 			foreach(GameObject o in CharController.Instance.selectedHumans)
 				o.GetComponent<LifeManager>().RecoverHealth(50);
-			
+			collider.GetComponent<ItemSoundManager>().ActivateBiteSound();
 			ObjectPool.instance.PoolGameObject(collider.gameObject);
 		}
 	}

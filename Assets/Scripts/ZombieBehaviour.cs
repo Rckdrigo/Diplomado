@@ -1,73 +1,101 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+using System.Collections.Generic;
+
 [RequireComponent(typeof(SphereCollider))]
 [RequireComponent(typeof(LifeManager))]
 [RequireComponent(typeof(Rigidbody))]
 public class ZombieBehaviour : Follower {
 
-	protected bool following;
-	GameObject currentObjective;
 	public int damageDeal = 50;
 	[HideInInspector()]
 	public bool onFire;
 	public bool panic;
 	LifeManager life;
-	
+
+	public List<GameObject> objectives;
+
 	new void Start(){
 		base.Start();
+		objectives = new List<GameObject>();
 		CharController.Instance.Lose += Lose;
 		rigidbody.isKinematic = true;
 		collider.isTrigger = true;
-		following = false;
-		currentObjective = null;
 		life  = GetComponent<LifeManager>();
 		life.NoHealth += Panic;
 	}
 
 	new void Update(){
 		base.Update();
-		if(following)
-			destination = currentObjective.transform.position;
+
+		if(objectives.Count >0){
+			if(objectives[0].GetComponent<HumanDeath>().dead){
+				objectives.Remove(objectives[0]);
+			}
+			if(Vector3.Distance(transform.position,objectives[0].transform.position) < 3.5f)	
+				animator.SetTrigger("Bite");
+
+			if(life.life>0)
+				destination = objectives[0].transform.position;
+
+		}
 	}
 
 	void Follow(){
-		following = true;
-		agent.SetDestination(currentObjective.transform.position);
+		destination = objectives[0].transform.position;
+		StartCoroutine("ChangeObjective");
 	}
-	
+
+	IEnumerator ChangeObjective(){
+		yield return new WaitForSeconds(3);
+		if(objectives.Count>0){
+			float min = Vector3.Distance(objectives[0].transform.position,transform.position);
+			GameObject newObjective = objectives[0];
+			for(int i = 1 ; i< objectives.Count ; i++){
+				if(Vector3.Distance(objectives[i].transform.position,transform.position) < min){
+					min = Vector3.Distance(objectives[i].transform.position,transform.position);
+					newObjective = objectives[i];
+				}
+ 		
+				destination = newObjective.transform.position;
+			}
+		StartCoroutine("ChangeObjective");
+		}
+	}
+
+	public void ResetPosition(){
+		transform.position = initialPosition;
+	}
+
 	IEnumerator FireDamage(){
 		onFire = true;
-		life.RecievedDamage(10);
+		life.RecievedDamage(35);
 		yield return new WaitForSeconds(0.5f);
 		onFire = false;
 	}
-	
+
 	void OnTriggerEnter(Collider collider){
 		if(!panic){
-			if(collider.CompareTag("MiniMan") && !following && collider.GetComponent<MiniManIA>().selected){
-				following = true;
-				animator.SetTrigger("Resurrect");
-				currentObjective = collider.gameObject;
+			if(collider.CompareTag("MiniMan") && !collider.GetComponent<HumanDeath>().dead && collider.GetComponent<MiniManIA>().selected){
+				if(animator.GetCurrentAnimatorStateInfo(0).IsName("rollGround"))
+					animator.SetTrigger("Resurrect");
+				objectives.Add(collider.gameObject);
 			}		
 		}
 	}
 	
 	void OnTriggerStay(Collider collider){
-		if(!panic){
-			if(following && collider.CompareTag("MiniMan")){
-				if(currentObjective.activeSelf == true){
-					if(Vector3.Distance(transform.position,collider.transform.position) < Vector3.Distance(transform.position,currentObjective.transform.position))
-						currentObjective = collider.gameObject;
-	
-					if(Vector3.Distance(transform.position,currentObjective.transform.position) < 3.5f)
-						animator.SetTrigger("Bite");	
-				}else
-					currentObjective = collider.gameObject;
+		if(!panic ){
+			if(!objectives.Contains(collider.gameObject)){
+				if(collider.CompareTag("MiniMan") && !collider.GetComponent<HumanDeath>().dead && collider.GetComponent<MiniManIA>().selected){
+					if(animator.GetCurrentAnimatorStateInfo(0).IsName("rollGround"))
+						animator.SetTrigger("Resurrect");
+					objectives.Add(collider.gameObject);
+				}	
 			}
-			
-			
-			if(following && collider.CompareTag("Fire")){
+
+			if(collider.CompareTag("Fire")){
 				if(!onFire && Vector3.Distance(collider.transform.position,transform.position) < 2f)
 					StartCoroutine("FireDamage");
 				
@@ -76,11 +104,12 @@ public class ZombieBehaviour : Follower {
 	}
 
 	void Panic(){
+		StopCoroutine("ChangeObjective");
+		objectives.Clear();
 		panic = true;
 		animator.SetTrigger("Panic");
-		following = false;
 		destination = initialPosition;
-		Invoke("Die",10);
+		Invoke("Die",5);
 	}
 
 
@@ -92,19 +121,21 @@ public class ZombieBehaviour : Follower {
 
 	void Dead(){
 		life.life = life.maxlife;
-		currentObjective = null;
+		objectives.Clear();
 		panic = false;
 	}
 	
 	void Lose(){
-		following = false;
+		objectives.Clear();
+		animator.SetTrigger("Die");
 	}
 	
 	void Bitting(){
-		if(currentObjective != null){
-			if(Vector3.Distance(transform.position,currentObjective.transform.position) < 3.5f)
-				CharController.Instance.DamageHuman(currentObjective,damageDeal);
-
+		if(objectives.Count >0){
+			if(Vector3.Distance(transform.position,objectives[0].transform.position) < 3.5f && !objectives[0].GetComponent<HumanDeath>().dead){
+				CharController.Instance.DamageHuman(objectives[0],damageDeal);
+				life.RecoverHealth(20);
+			}
 		}
 	}
 

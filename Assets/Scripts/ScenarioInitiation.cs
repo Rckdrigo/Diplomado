@@ -7,8 +7,23 @@ public class ScenarioInitiation : MonoBehaviour {
 	public Transform humanSpawnPoints;
 	public Transform medPackSpawnPoints;
 
-	// Use this for initialization
-	void Start () {
+	void Start(){
+		GameState.Instance.Restart += ResetScenario;
+		SetScenario ();
+	}
+
+	void ResetScenario(){
+		CharController.Instance.PoolAllCharacters();
+		EnemyController.Instance.PoolAllCharacters();
+		ItemController.Instance.PoolAllItems();
+		SetScenario();
+	}
+
+	void SetScenario () {
+		EnemyController.Instance.enemies.Clear();
+		CharController.Instance.humans.Clear();
+		ItemController.Instance.items.Clear();
+
 		for(int i = 0; i < zombieSpawnPoints.childCount; i++){
 			GameObject temp = ObjectPool.instance.GetGameObjectOfType("Zombi",true);
 			temp.transform.position = zombieSpawnPoints.GetChild(i).position;

@@ -5,16 +5,14 @@ using System.Collections.Generic;
 
 public class ItemController : Singleton<ItemController> {
 
-	[HideInInspector()]
+	//[HideInInspector()]
 	public List<GameObject> items;
 	
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		items = new List<GameObject>();
-		CharController.Instance.Lose += PoolAllItems;
 	}
-	
-	void PoolAllItems(){
+	public void PoolAllItems(){
 		foreach(GameObject item in items){
 			ObjectPool.instance.PoolGameObject(item);
 		}
