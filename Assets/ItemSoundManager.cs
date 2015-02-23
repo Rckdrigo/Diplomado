@@ -12,8 +12,10 @@ public class ItemSoundManager : MonoBehaviour {
 	}
 
 	public void ActivateBiteSound(){
+		print(audio.clip);
 		if(!audio.isPlaying)
-			audio.Play ();
+			audio.Play();
+		
 		print ("CRUNCH: " + audio.clip + " " + audio.isPlaying);
 	}
 }

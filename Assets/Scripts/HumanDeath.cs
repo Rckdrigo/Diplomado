@@ -12,7 +12,6 @@ public class HumanDeath : MonoBehaviour {
 
 	void Restart(){
 		dead = false;
-		audio.Play();
 	}
 	
 	// Update is called once per frame

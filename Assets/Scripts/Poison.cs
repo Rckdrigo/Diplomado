@@ -17,7 +17,7 @@ public class Poison : MonoBehaviour {
 	
 	IEnumerator PoisonDamage(){
 
-		yield return new WaitForSeconds(CharController.Instance.selectedHumans.Count*0.5f+1);
+		yield return new WaitForSeconds(CharController.Instance.selectedHumans.Count*0.3f+1);
 		if(!GameState.Instance.paused)
 			for(int i = 0; i < CharController.Instance.selectedHumans.Count; i++)
 				CharController.Instance.selectedHumans[i].GetComponent<LifeManager>().RecievedDamage(damage);
