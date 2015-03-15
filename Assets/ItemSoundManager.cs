@@ -8,14 +8,14 @@ public class ItemSoundManager : MonoBehaviour {
 	}
 	
 	void Restart(){
-		audio.Stop();
+		GetComponent<AudioSource>().Stop();
 	}
 
 	public void ActivateBiteSound(){
-		print(audio.clip);
-		if(!audio.isPlaying)
-			audio.Play();
+		print(GetComponent<AudioSource>().clip);
+		if(!GetComponent<AudioSource>().isPlaying)
+			GetComponent<AudioSource>().Play();
 		
-		print ("CRUNCH: " + audio.clip + " " + audio.isPlaying);
+		print ("CRUNCH: " + GetComponent<AudioSource>().clip + " " + GetComponent<AudioSource>().isPlaying);
 	}
 }

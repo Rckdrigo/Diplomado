@@ -36,7 +36,7 @@ private var _blinkCounter:int;
 private var _stopBlink:int;
 
 function LateUpdate () {
-	if(!collider.enabled && projector && root){
+	if(!GetComponent.<Collider>().enabled && projector && root){
 		projector.transform.position.x = root.position.x;
 		projector.transform.position.z = root.position.z;
 	}
@@ -54,7 +54,7 @@ function Start () {
 	boneRig = gameObject.GetComponentsInChildren (Rigidbody); 
 	disableRagdoll();
 	//Blinking
-	colorOriginal = _model.renderer.material.color;
+	colorOriginal = _model.GetComponent.<Renderer>().material.color;
 }
 
 function Blink(times:int, speed:float, red:float, green:float , blue:float){
@@ -82,14 +82,14 @@ function BlinkInvoke () {
 			color = new Color(_R , _G , _B ,1);
 		}
 		
-		if(_model.renderer.material.color == colorOriginal){
-			_model.renderer.material.color = color;
+		if(_model.GetComponent.<Renderer>().material.color == colorOriginal){
+			_model.GetComponent.<Renderer>().material.color = color;
 		}else{
-			_model.renderer.material.color = colorOriginal;
+			_model.GetComponent.<Renderer>().material.color = colorOriginal;
 		}
 		_blinkCounter++;
 	}else{
-		_model.renderer.material.color = colorOriginal;
+		_model.GetComponent.<Renderer>().material.color = colorOriginal;
 		_blinkCounter = 0;
 		CancelInvoke();
 	}
@@ -97,30 +97,30 @@ function BlinkInvoke () {
 
 function disableRagdoll () {
 	for (var ragdoll : Rigidbody in boneRig) {
-		if(ragdoll.collider)
-		ragdoll.collider.enabled = false;
+		if(ragdoll.GetComponent.<Collider>())
+		ragdoll.GetComponent.<Collider>().enabled = false;
 		ragdoll.isKinematic = true;
 		ragdoll.mass = 0.01;
 	}
-	collider.enabled = true;
-	rigidbody.isKinematic = true;
-	rigidbody.useGravity = false;
+	GetComponent.<Collider>().enabled = true;
+	GetComponent.<Rigidbody>().isKinematic = true;
+	GetComponent.<Rigidbody>().useGravity = false;
 }
  
 function enableRagdoll (delay:float, force:Vector3) {
 	yield(WaitForSeconds(delay));
 	for (var ragdoll : Rigidbody in boneRig) {
-		if(ragdoll.collider)
-		ragdoll.collider.enabled = true;
+		if(ragdoll.GetComponent.<Collider>())
+		ragdoll.GetComponent.<Collider>().enabled = true;
 		ragdoll.isKinematic = false; 
 		ragdoll.mass = mass;
 		if(force.magnitude > 0)
 		ragdoll.AddForce(force*Random.value);
 	}
 	GetComponent(Animator).enabled=false;
-	collider.enabled = false;
-	rigidbody.isKinematic = true;
-	rigidbody.useGravity = true;
+	GetComponent.<Collider>().enabled = false;
+	GetComponent.<Rigidbody>().isKinematic = true;
+	GetComponent.<Rigidbody>().useGravity = true;
 	for(var i:int; i < this._disableWhenDecapitated.length; i++){
 				_disableWhenDecapitated[i].SetActive(false);
 			}
@@ -134,17 +134,17 @@ function Decapitate (explode:boolean, delay:float, force:Vector3) {
 			if(!explode){
 				var h:GameObject = Instantiate(_head, _headBone.position, transform.rotation);
 				h.transform.localScale = _headBone.localScale*transform.localScale.x;
-				Physics.IgnoreCollision(gameObject.collider, h.collider);
-				Destroy(_headBone.collider);
-				h.renderer.sharedMaterial = _model.GetComponent(SkinnedMeshRenderer).sharedMaterial;
+				Physics.IgnoreCollision(gameObject.GetComponent.<Collider>(), h.GetComponent.<Collider>());
+				Destroy(_headBone.GetComponent.<Collider>());
+				h.GetComponent.<Renderer>().sharedMaterial = _model.GetComponent(SkinnedMeshRenderer).sharedMaterial;
 				if(force.magnitude > 0)
-				h.rigidbody.AddForce(force*Random.value);
-				h.rigidbody.AddTorque(Vector3(Random.Range(-10, 10),Random.Range(-10, 10),Random.Range(-10, 10)));
-				h.transform.FindChild("Head PS").particleSystem.startColor = this._bloodColor;
-				EnableCollisions(gameObject.collider, h.collider);
+				h.GetComponent.<Rigidbody>().AddForce(force*Random.value);
+				h.GetComponent.<Rigidbody>().AddTorque(Vector3(Random.Range(-10, 10),Random.Range(-10, 10),Random.Range(-10, 10)));
+				h.transform.FindChild("Head PS").GetComponent.<ParticleSystem>().startColor = this._bloodColor;
+				EnableCollisions(gameObject.GetComponent.<Collider>(), h.GetComponent.<Collider>());
 			}else{
 				var e:GameObject = Instantiate(_explodeHeadPS.gameObject, _headBone.position, transform.rotation);
-				e.particleSystem.startColor = this._bloodColor;
+				e.GetComponent.<ParticleSystem>().startColor = this._bloodColor;
 				Destroy(e, 2);
 			}
 			if(_bodyPS){

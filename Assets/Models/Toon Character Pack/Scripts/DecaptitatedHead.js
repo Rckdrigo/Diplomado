@@ -10,7 +10,7 @@ var force:Vector3;
 var delay:float = 0.25;
 function Start () {
 	yield(WaitForSeconds(delay));
-	rigidbody.isKinematic = false;
-	rigidbody.AddForce(force*Random.value);
-	rigidbody.AddTorque(Vector3(Random.Range(-1, 1),Random.Range(-1, 1),Random.Range(-1, 1)));
+	GetComponent.<Rigidbody>().isKinematic = false;
+	GetComponent.<Rigidbody>().AddForce(force*Random.value);
+	GetComponent.<Rigidbody>().AddTorque(Vector3(Random.Range(-1, 1),Random.Range(-1, 1),Random.Range(-1, 1)));
 }

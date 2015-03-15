@@ -14,7 +14,7 @@ public class MiniManIA : Follower {
 		GameState.Instance.Restart += Restart;
 		CharController.Instance.Lose += Lose;
 
-		rimShader.renderer.material.SetColor("_RimColor",Color.white);
+		rimShader.GetComponent<Renderer>().material.SetColor("_RimColor",Color.white);
 		destination = initialPosition;
 		if(initial){
 			ActualSelectedState(true);
@@ -29,11 +29,11 @@ public class MiniManIA : Follower {
 	
 	public void ActualSelectedState(bool active){
 		if(!active){
-			rimShader.renderer.material.SetColor("_RimColor",Color.blue);
+			rimShader.GetComponent<Renderer>().material.SetColor("_RimColor",Color.blue);
 			StartCoroutine("FollowLeader");
 		}
 		else{
-			rimShader.renderer.material.SetColor("_RimColor",Color.red);
+			rimShader.GetComponent<Renderer>().material.SetColor("_RimColor",Color.red);
 			StopCoroutine("FollowLeader");
 		}
 	}
@@ -52,8 +52,8 @@ public class MiniManIA : Follower {
 
 	void Restart(){		
 		ResetPosition();
-		collider.enabled = true;
-		rimShader.renderer.material.SetColor("_RimColor",Color.white);
+		GetComponent<Collider>().enabled = true;
+		rimShader.GetComponent<Renderer>().material.SetColor("_RimColor",Color.white);
 		destination = transform.position;
 		
 		GetComponent<MiniManIA>().StopCoroutine("FollowLeader");

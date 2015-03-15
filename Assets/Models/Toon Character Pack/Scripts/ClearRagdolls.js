@@ -12,7 +12,7 @@ function ClearRags () {
 	var counter:int;
 	for(var fooObj : GameObject in GameObject.FindGameObjectsWithTag("Player"))
 		{		
-    		if(fooObj.rigidbody.useGravity==true){
+    		if(fooObj.GetComponent.<Rigidbody>().useGravity==true){
     		if(!rag)
       		rag = fooObj;
       		counter++;

@@ -17,13 +17,13 @@ public class HumanDeath : MonoBehaviour {
 	// Update is called once per frame
 	void Die () {
 		dead = true;
-		audio.Stop();
+		GetComponent<AudioSource>().Stop();
 		UIActiveCharacters.maxChars--;
 		GetComponent<Animator>().SetTrigger("Die");
 		GetComponent<MiniManIA>().StopCoroutine("FollowLeader");
 		GetComponent<MiniManIA>().selected = false;
 		GetComponent<MiniManIA>().rimShader.material.SetColor("_RimColor",Color.black);
-		collider.enabled= false;
+		GetComponent<Collider>().enabled= false;
 
 		CharController.Instance.HumanKilled(gameObject);
 	}

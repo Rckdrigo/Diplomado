@@ -40,8 +40,8 @@ public class GameState : Singleton<GameState>{
 		paused = false;
 		anim.SetTrigger("Restart");
 		Time.timeScale = 1;
-		if(!audio.isPlaying)
-			audio.Play();
+		if(!GetComponent<AudioSource>().isPlaying)
+			GetComponent<AudioSource>().Play();
 	}
 
 	public void Pause(){

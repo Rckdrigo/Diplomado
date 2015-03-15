@@ -20,8 +20,8 @@ public class ZombieBehaviour : Follower {
 		base.Start();
 		objectives = new List<GameObject>();
 		CharController.Instance.Lose += Lose;
-		rigidbody.isKinematic = true;
-		collider.isTrigger = true;
+		GetComponent<Rigidbody>().isKinematic = true;
+		GetComponent<Collider>().isTrigger = true;
 		life  = GetComponent<LifeManager>();
 		life.NoHealth += Panic;
 	}

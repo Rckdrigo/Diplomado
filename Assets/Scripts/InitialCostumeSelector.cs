@@ -7,7 +7,7 @@ public class InitialCostumeSelector : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		renderer.material.mainTexture = costumes[Random.Range(0,costumes.Length-1)];
+		GetComponent<Renderer>().material.mainTexture = costumes[Random.Range(0,costumes.Length-1)];
 	}
 	
 }
